@@ -1,35 +1,52 @@
-const express = require('express')
-const router = express.Router()
+var express = require("express");
+var app = express();
 
-// Path to your JSON file, although it can be hardcoded in this file.
-const dummyData = require('../../data/pr10-data.json')
+const { Pool } = require("pg");
 
-router.get('/fetchAll', (req, res, next) => {
-    res.json(dummyData)
-})
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool ({connectionString: connectionString});
 
-router.post('/insertName', (req, res, next) => {
-    // Typically you should do some sort of filtering and error checking. This is minimal, and makes sure we're not accepting empty values
-    if (req.body.newName !== undefined) {
-        const newName = req.body.newName
-        if (
-            dummyData.avengers.find(
-                element => element.name === req.body.newName
-            ) === undefined
-        ) { // Make our submissions somewhat unique.
-            dummyData.avengers.push({ name: newName }) // Push new object into the dummyData
-            res.sendStatus(200)
-        }
-    } else {
-        res.sendStatus(400) // Bad request error code
+app.set("port", (process.env.PORT || 8080))
+
+app.get("/getMovie", getMovie)
+
+app.listen(app.get("port"), function(){
+    console.log("listening for connection on port: ", app.get("port"));
+
+});
+
+function getMovie(req, res){
+
+    console.log("Getting Movie information.");
+
+    var id = req.query.id;
+
+    console.log("getting the ID: ", id);
+
+    getMovieFromDb(id, function(error, result){
+      console.log("Back from database with result: ",result);
+    });
+
+    var result = {id: 1, movie_name: "Cool"};
+
+    res.json(result);
+}
+
+function getMovieFromDb(id, callback) {
+  console.log("getMovieFromDb called with id: ", id);
+
+  var sql = "SELECT id, movie_name, description FROM movies WHERE id = $1::int";
+  var params = [id];
+
+  pool.query(sql, params, function(err, result){
+
+    if(err){
+      console.log("An eror with the DB occured");
+      console.log(err);
+      callback(err, null);
     }
-})
+    console.log("Found DB result: " + JSON.stringify(result.rows));
 
-router.get('/', (req, res, next) => {
-    res.render('pages/proveAssignments/pr10', {
-        title: 'Prove Assignment 10',
-        path: '/proveAssignments/10'
-    })
-})
-
-module.exports = router
+    callback(null, result.rows);
+  });
+}
