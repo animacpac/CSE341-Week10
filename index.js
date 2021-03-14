@@ -7,16 +7,23 @@ const { Pool } = require("pg");
 const connectionString = process.env.DATABASE_URL;
 const pool = new Pool ({connectionString: connectionString});
 
-app.set("port", (process.env.PORT || 8080))
+Pool.connect()
+.then(() => Pool.query("select * from movies"))
+.then (result => console.table(result.rows))
+.catch(e => Pool.end())
 
-app.get("/getMovie",getMovie)
+
+app.get("/getRestaurant",getRestaurant)
 
 app.listen(app.get("port"), function(){
     console.log("listening for connection on port: ", app.get("port"));
 
 });
+app.get('/', function(request, response) {
+  response.render('pages/index');
+});
 
-function getMovie(req, res){
+function getRestaurant(req, res){
 
     console.log("Getting Movie information.");
 
@@ -24,7 +31,7 @@ function getMovie(req, res){
 
     console.log("getting the ID: ", id);
 
-    getMovieFromDb(id, function(error, result){
+    getRestaurantFromDb(id, function(error, result){
 
       if (error || result == null || result.lenght != 1) {
         res.status(500).json({sucess:false, data: error});
@@ -38,10 +45,10 @@ function getMovie(req, res){
 
 }
 
-function getMovieFromDb(id, callback) {
-  console.log("getMovieFromDb called with id: ", id);
+function getRestaurantFromDb(id, callback) {
+  console.log("getRestaurantFromDb called with id: ", id);
 
-  var sql = "SELECT id, movie_name, description FROM movies WHERE id = $1::int";
+  var sql = "SELECT * FROM movies WHERE id = $1::int";
   var params = [id];
 
   pool.query(sql, params, function(err, result){
