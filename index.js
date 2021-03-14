@@ -1,3 +1,4 @@
+const { response } = require("express");
 var express = require("express");
 var app = express();
 
@@ -8,7 +9,7 @@ const pool = new Pool ({connectionString: connectionString});
 
 app.set("port", (process.env.PORT || 8080))
 
-app.get("/getMovie", getMovie)
+app.get("/", getMovie)
 
 app.listen(app.get("port"), function(){
     console.log("listening for connection on port: ", app.get("port"));
@@ -24,12 +25,19 @@ function getMovie(req, res){
     console.log("getting the ID: ", id);
 
     getMovieFromDb(id, function(error, result){
+
+      if (error || result == null || result.lenght != 1) {
+        response.status(500).json({sucess:false, data: error});
+      }
+      else{
+        res.json(result);
+      }
       console.log("Back from database with result: ",result);
+      res.json(result);
+
     });
 
-    var result = {id: 1, movie_name: "Cool"};
-
-    res.json(result);
+   
 }
 
 function getMovieFromDb(id, callback) {
