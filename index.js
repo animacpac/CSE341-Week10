@@ -30,7 +30,7 @@ function getMovie(req, res){
         res.status(500).json({sucess:false, data: error});
       }
       else{
-        res.json(result[0]);
+        res.json(result[1]);
       }
      
 
