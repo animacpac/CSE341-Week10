@@ -36,7 +36,6 @@ function getMovie(req, res){
 
     });
 
-   
 }
 
 function getMovieFromDb(id, callback) {
