@@ -9,7 +9,7 @@ const pool = new Pool ({connectionString: connectionString});
 
 app.set("port", (process.env.PORT || 8080))
 
-app.get(getMovie)
+app.get("/getMovie",getMovie)
 
 app.listen(app.get("port"), function(){
     console.log("listening for connection on port: ", app.get("port"));
