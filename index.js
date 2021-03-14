@@ -27,13 +27,12 @@ function getMovie(req, res){
     getMovieFromDb(id, function(error, result){
 
       if (error || result == null || result.lenght != 1) {
-        response.status(500).json({sucess:false, data: error});
+        res.status(500).json({sucess:false, data: error});
       }
       else{
-        res.json(result);
+        res.json(result[0]);
       }
-      console.log("Back from database with result: ",result);
-      res.json(result);
+     
 
     });
 
