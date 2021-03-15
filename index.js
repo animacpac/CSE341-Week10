@@ -50,9 +50,9 @@ function getRestaurant(req, res){
 
 function getRestaurantFromDb(id, callback) {
   console.log("getRestaurantFromDb called with id: ", id);
-
+  
   var sql = "SELECT * FROM movies WHERE id = $1::int";
-  var params = [id];
+  var params = ['restautant'];
 
   pool.query(sql, params, function(err, result){
 
