@@ -16,7 +16,7 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
-//app.get("/getRestaurant",getRestaurant)
+app.get("/getRestaurant",getRestaurant)
 
 app.listen(app.get("port"), function(){
     console.log("listening for connection on port: ", app.get("port"));
