@@ -50,9 +50,11 @@ function getRestaurant(req, res){
 
 function getRestaurantFromDb(id, callback) {
   console.log("getRestaurantFromDb called with id: ", id);
-  
-  var sql = "SELECT * FROM movies WHERE id = $1::int";
-  var params = ['restautant'];
+  var client = new pg.Client(connectionString);
+
+  var rName = rName['']
+  var sql = "SELECT * FROM movies WHERE restaurant = ['restaurant']";
+  var params = [id];
 
   pool.query(sql, params, function(err, result){
 
