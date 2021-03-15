@@ -7,13 +7,16 @@ const { Pool } = require("pg");
 const connectionString = process.env.DATABASE_URL;
 const pool = new Pool ({connectionString: connectionString});
 
-Pool.connect()
-.then(() => Pool.query("select * from movies"))
-.then (result => console.table(result.rows))
-.catch(e => Pool.end())
+app.set("port", (process.env.PORT || 8080))
+app.use(express.static(__dirname + '/public'));
 
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.get('/', function(request, response) {
+  response.render('pages/index');
+});
 
-app.get("/getRestaurant",getRestaurant)
+//app.get("/getRestaurant",getRestaurant)
 
 app.listen(app.get("port"), function(){
     console.log("listening for connection on port: ", app.get("port"));
